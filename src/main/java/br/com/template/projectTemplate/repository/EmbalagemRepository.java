@@ -3,6 +3,8 @@ package br.com.template.projectTemplate.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import br.com.template.projectTemplate.entity.Embalagem;
 
@@ -38,6 +40,20 @@ public interface EmbalagemRepository extends JpaRepository<Embalagem, Long> {
 	List<Embalagem> findByNomeGreaterThanOrderByNomeAscIdDesc(String nome);
 	
 	
+/*******************************************************************/
+	
 	// 1/N query: findByAttributeFieldinEntityAction: e.g.: findByPhonesNumberStartingWith
 	// where in the entity has List<Phone> phones and Phone has number attribute
+	
+	/*******************************************************************/
+	
+	@Query("SELECT embalagem FROM Embalagem embalagem WHERE UPPER(embalagem.nome) LIKE UPPER(:nome) ORDER BY embalagem ASC")
+	List<Embalagem> findByNomeConstainsSQL(@Param("nome") String nome);
+	
+	@Query("SELECT embalagem FROM Embalagem embalagem WHERE id IN :id ORDER BY embalagem.id")
+	List<Embalagem> findByCodigoInSQL(@Param("id") List<Long> id);
+	
+	// native query at PedidoRepository
+
+	/*******************************************************************/
 }
